@@ -296,14 +296,12 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
         [_outputStream close];
         _outputStream = nil;
     }
-#if NS_EXTENSION_UNAVAILABLE_IOS
-#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
-    if (_backgroundTaskIdentifier) {
-        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTaskIdentifier];
-        _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-    }
-#endif
-#endif
+//#if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
+//    if (_backgroundTaskIdentifier) {
+//        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTaskIdentifier];
+//        _backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+//    }
+//#endif
 }
 
 - (NSString *)description {
@@ -358,31 +356,29 @@ static BOOL AFSecKeyIsEqualToKey(SecKeyRef key1, SecKeyRef key2) {
     }
     [self.lock unlock];
 }
-#if NS_EXTENSION_UNAVAILABLE_IOS
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
 - (void)setShouldExecuteAsBackgroundTaskWithExpirationHandler:(void (^)(void))handler {
-    [self.lock lock];
-    if (!self.backgroundTaskIdentifier) {
-        UIApplication *application = [UIApplication sharedApplication];
-        __weak __typeof(&*self)weakSelf = self;
-        self.backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
-            __strong __typeof(&*weakSelf)strongSelf = weakSelf;
-            
-            if (handler) {
-                handler();
-            }
-            
-            if (strongSelf) {
-                [strongSelf cancel];
-                
-                [application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
-                strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
-            }
-        }];
-    }
-    [self.lock unlock];
+//    [self.lock lock];
+//    if (!self.backgroundTaskIdentifier) {
+//        UIApplication *application = [UIApplication sharedApplication];
+//        __weak __typeof(&*self)weakSelf = self;
+//        self.backgroundTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
+//            __strong __typeof(&*weakSelf)strongSelf = weakSelf;
+//            
+//            if (handler) {
+//                handler();
+//            }
+//            
+//            if (strongSelf) {
+//                [strongSelf cancel];
+//                
+//                [application endBackgroundTask:strongSelf.backgroundTaskIdentifier];
+//                strongSelf.backgroundTaskIdentifier = UIBackgroundTaskInvalid;
+//            }
+//        }];
+//    }
+//    [self.lock unlock];
 }
-#endif
 #endif
 - (void)setUploadProgressBlock:(void (^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))block {
     self.uploadProgress = block;
